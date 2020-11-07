@@ -1,17 +1,18 @@
 import argparse
 import yaml, json
+import os
 from alectio_sdk.flask_wrapper import Pipeline
 from process import train, test, infer, getdatasetstate
+import logging
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--config", help="Path to config.yaml", required=True)
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument("--config", help="Path to config.yaml", required=True)
+# args = parser.parse_args()
 
-with open(args.config, "r") as stream:
+with open("./config.yaml", "r") as stream:
     args = yaml.safe_load(stream)
 
-# put the train/test/infer processes into the constructor
-app = Pipeline(
+AlectioPipeline = Pipeline(
     name=args["exp_name"],
     train_fn=train,
     test_fn=test,
@@ -21,7 +22,4 @@ app = Pipeline(
     token="hPrjnEpRi0jLikGNNU8lIiCulCbdHAMJeIcBOc2XB4",
 )
 
-if __name__ == "__main__":
-    # payload = json.load(open(args["sample_payload"], "r"))
-    # app._one_loop(args=args, payload=payload)
-    app(debug=True)
+app = AlectioPipeline.app
